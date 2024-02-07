@@ -33,28 +33,76 @@ function oldScrabbleScorer(word) {
 
 function initialPrompt() {
    let word = input.question("Let's play some scrabble! Enter a word:");
-   let score = oldScrabbleScorer(word);
-   console.log(score);
+   // let score = oldScrabbleScorer(word);
+   // console.log(score);
+   return word;
 };
 
-let simpleScorer;
+function simpleScorer(word) {
+   word = word.toLowerCase();
+   let letterPoints = word.length;
+   return letterPoints;
+   };
 
-let vowelBonusScorer;
+function vowelBonusScorer(word) {
+   const vowels = ['a', 'e', 'i', 'o', 'u'];
+    let score = 0
+    for (let i of word.toLowerCase()) {
+        if (vowels.includes(i)) {
+            score += 3;
+        } else {
+            score++;
+        }
+    }
+    return score;
+};
 
 let scrabbleScorer;
 
-const scoringAlgorithms = [];
+const scoringAlgorithms = [
+   {
+   name: "Simple Score",
+   description: "Each letter is worth 1 point.",
+   scoringFunction: simpleScorer
+   },
+   {
+   name: "Bonus Vowels",
+   description: "Vowels are 3 pts, consonants are 1 pt.",
+   scoringFunction: vowelBonusScorer
+   },
+   {
+   name: "Scrabble",
+   description: "The traditional scoring algorithm.",
+   scoringFunction: oldScrabbleScorer
+}
+];
 
-function scorerPrompt() {}
 
+function scorerPrompt() {
+   let scoreMethod = input.question("Which scoring algorithm would you like to use?\n 0 - Simple: One point per character\n 1 - Vowel Bonus: Vowels are worth 3 points\n 2 - Scrabble: Uses traditional scoring system\n");
+   if (scoreMethod === '0') {
+       return scoringAlgorithms[0];
+   } else if (scoreMethod === '1') {
+       return scoringAlgorithms[1];
+   } else if (scoreMethod === '2') {
+       return scoringAlgorithms[2];
+   } else {
+       return "Invalid scoring algorithm selected.";
+   }
+}
+
+   
 function transform() {};
 
 let newPointStructure;
 
 function runProgram() {
-   initialPrompt();
-   
+   let word = initialPrompt();
+   let selectedScorer = scorerPrompt();
+   let score = selectedScorer.scoringFunction(word);
+   console.log(`Your word '${word}' scored ${score} points using ${selectedScorer.name}.`);
 }
+
 
 // Don't write any code below this line //
 // And don't change these or your program will not run as expected //
