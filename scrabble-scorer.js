@@ -57,7 +57,15 @@ function vowelBonusScorer(word) {
     return score;
 };
 
-let scrabbleScorer;
+function scrabbleScorer(word) {
+   word = word.toLowerCase();
+   let score = 0;
+   for (let i = 0; i < word.length; i++) {
+      let letter = word[i];
+      score += newPointStructure[letter];
+   }
+   return score;
+}
 
 const scoringAlgorithms = [
    {
@@ -73,7 +81,7 @@ const scoringAlgorithms = [
    {
    name: "Scrabble",
    description: "The traditional scoring algorithm.",
-   scoringFunction: oldScrabbleScorer
+   scoringFunction: scrabbleScorer
 }
 ];
 
@@ -92,9 +100,19 @@ function scorerPrompt() {
 }
 
    
-function transform() {};
+function transform (oldPointStructure) {
+   let newPointStructure = {};
+   for (let newPts in oldPointStructure) {
+      for (let letter in oldPointStructure[newPts]) {
+         newPointStructure[oldPointStructure[newPts]
+         [letter].toLowerCase()] = Number(newPts);
+      }
+   }
+   return newPointStructure;
+}
 
-let newPointStructure;
+let newPointStructure = transform(oldPointStructure);
+
 
 function runProgram() {
    let word = initialPrompt();
@@ -102,7 +120,6 @@ function runProgram() {
    let score = selectedScorer.scoringFunction(word);
    console.log(`Your word '${word}' scored ${score} points using ${selectedScorer.name}.`);
 }
-
 
 // Don't write any code below this line //
 // And don't change these or your program will not run as expected //
